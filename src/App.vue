@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <header-component>{{ app_version }}</header-component>
+    <header-component v-bind:app-version="appVersion"></header-component>
     <contents></contents>
     <footer-component>© Keita Watanabe | Matium</footer-component>
   </div>
@@ -22,7 +22,7 @@ import Contents from './components/Contents.vue';
 })
 export default class App extends Vue {
   // 現在のアプリケーションのバージョン
-  public app_version: string = 'ver.0.1';
+  public appVersion: string = 'ver.0.1';
 }
 
 </script>

@@ -27,14 +27,7 @@ Vue.use(VueYouTubeEmbed);
  * VueYouTubeEmbed：YouTubeの埋め込みプレイヤーを動的に扱うプラグイン
  *
  */
-@Component({
-  props: {
-    /* YouTubeのビデオIDをセットするプロパティ */
-    ytVideoId: {
-      default: ''
-    }
-  }
-})
+@Component
 export default class YouTubeVideoPlayer extends Vue {
   /* YouTubeのビデオID */
   public videoId: string = '';
@@ -51,6 +44,14 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 表示フラグ */
   public isShown: boolean = true;
 
+  // 設定前の現在のビデオID
+  protected currentVideoId: string = '';
+
+
+  /* /////////////////////////////////////////
+  ** Props
+  //////////////////////////////////////////// */
+  @Prop() private ytVideoId!: string;
 
   /* /////////////////////////////////////////
   ** Watcher
@@ -60,8 +61,8 @@ export default class YouTubeVideoPlayer extends Vue {
    * 更新時に非表示→表示トランジションを実行するためにwatchする
    */
   @Watch('ytVideoId')
-  onYtVideoIdChange (newValue: string, oldValue: string):void {
-    //this.videoId = newValue;
+  protected onYtVideoIdChange(newValue: string, oldValue: string): void {
+    // this.videoId = newValue;
     if (newValue !== oldValue) {
       this.isShown = false;
     }
@@ -72,18 +73,10 @@ export default class YouTubeVideoPlayer extends Vue {
   ** LifeCycles
   //////////////////////////////////////////// */
   /* DOMマウント前に実行されるメソッド */
-  public beforeMount () {
-    this.videoId = this.$props.ytVideoId;
-  }
-
-  /* DOMマウント時メソッド */
-  public mounted () {
-    /*
-    let $container = document.getElementsByClassName('video-container')[0];
-    let boxHeight = $container.clientHeight;
-    let boxWidth = Math.round(boxHeight * 1.7778);
-    $container.style.width = boxWidth + 'px';
-    */
+  protected beforeMount(): void {
+    // 初回起動時はytVideoIdプロパティをvideoIdにセットする
+    // つまり、プレイヤーのvideo-idバインディングに渡す
+    this.videoId = this.ytVideoId;
   }
 
 
@@ -91,12 +84,12 @@ export default class YouTubeVideoPlayer extends Vue {
   ** 表示・非表示メソッド群（アニメーション）
   //////////////////////////////////////////// */
   /* 要素配置前 */
-  protected beforeEnter (el: HTMLElement) {
+  protected beforeEnter(el: HTMLElement): void {
     console.log('Before Enter');
     el.style.opacity = '0';
   }
   /* 要素配置（表示アニメーション実行） */
-  protected enter (el: HTMLElement) {
+  protected enter(el: HTMLElement): void {
     console.log('Enter Animation');
     Velocity.animate(el, {
       opacity: [1.0, 0]
@@ -106,7 +99,7 @@ export default class YouTubeVideoPlayer extends Vue {
     });
   }
   /* 要素非表示（非表示アニメーション実行） */
-  protected leave (el: HTMLElement, done: Function) {
+  protected leave(el: HTMLElement, done: () => void): void {
     console.log('Leave Animation');
     Velocity.animate(el, {
       opacity: [0, 1.0]
@@ -120,7 +113,7 @@ export default class YouTubeVideoPlayer extends Vue {
     });
   }
   /* 要素非表示時はビデオIDをセットして再表示 */
-  protected afterLeave (el: HTMLElement) {
+  protected afterLeave(el: HTMLElement): void {
     console.log('After Leave');
     this.videoId = this.$props.ytVideoId;
     this.isShown = true;
@@ -135,7 +128,7 @@ export default class YouTubeVideoPlayer extends Vue {
    * @param width プレイヤーの幅
    * @param height プレイヤーの高さ
    */
-  public updateSize (width: number, height: number) {
+  public updateSize(width: number, height: number): void {
     this.width = width;
     this.height = height;
     // ルート要素の.video-boxのサイズ設定
