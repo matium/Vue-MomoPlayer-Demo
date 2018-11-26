@@ -1,6 +1,5 @@
 @charset "utf-8";
 @import "compass/reset";
-@import "compass/css3";
 @import url("https://use.typekit.net/ohp3fni.css");
 
 * {
@@ -29,28 +28,3 @@ body {
 }
 
 
-/**
- * 変数として使う値
- */
-$titleColor: #d1d5e1;
-$videoBorderColor: #282828;
-
-
-/**
- * 英語フォントを使用するmixin
- * @param $weight 適用するフォントのweight 'light''regular''bold'から選ぶ
- */
-@mixin enFont($weight: 'regular') {
-	font-family: nimbus-sans, sans-serif;
-	line-height: 1.25em;
-	letter-spacing: 0;
-	@if ($weight == 'bold') {
-		font-weight: 700;
-	}
-	@else if ($weight == 'light') {
-		font-weight: 200;
-	}
-	@else {
-		font-weight: 400;
-	}
-}

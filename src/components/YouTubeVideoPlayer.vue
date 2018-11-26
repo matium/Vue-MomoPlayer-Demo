@@ -139,16 +139,17 @@ export default class YouTubeVideoPlayer extends Vue {
 
 
 <style lang="scss">
-.video-transition-container {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-
 .video-box {
   position: relative;
   width: 800px;
   margin: 0 auto 0 auto;
+
+  @include smp {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
 }
 
 .yt-video {
@@ -169,6 +170,13 @@ export default class YouTubeVideoPlayer extends Vue {
     width: 100%;
     height: 100%;
     border: 1px solid $videoBorderColor;
+
+    @include smp {
+      border-top: 1px solid $videoBorderColor;
+      border-bottom: 1px solid $videoBorderColor;
+      border-left: none;
+      border-right: none;
+    }
   }
 }
 </style>

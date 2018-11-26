@@ -41,12 +41,20 @@ header {
     .subtitle-thin {
       @include enFont('light');
     }
+
+    @include smp {
+      font-size: 23pt;
+    }
   }
 
   .version {
     text-align: center;
     margin: 0 auto 0 auto;
     font-size: 11pt;
+
+    @include smp {
+      font-size: 11.5pt;
+    }
   }
 }
 </style>

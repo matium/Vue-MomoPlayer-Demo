@@ -12,6 +12,8 @@ import { Component, Vue } from 'vue-property-decorator';
 import HeaderComponent from './components/HeaderComponent.vue';
 import FooterComponent from './components/FooterComponent.vue';
 import Contents from './components/Contents.vue';
+import DeviceType from './utils/DeviceType';
+import * as viewportUnitsBuggyfill from 'viewport-units-buggyfill';
 
 @Component({
   components: {
@@ -23,13 +25,21 @@ import Contents from './components/Contents.vue';
 export default class App extends Vue {
   // 現在のアプリケーションのバージョン
   public appVersion: string = 'ver.0.1';
+
+  /* インスタンス作成時メソッド */
+  public created(): void {
+    DeviceType.update();
+    if (DeviceType.isSMP) {
+      viewportUnitsBuggyfill.init();
+    }
+  }
 }
 
 </script>
 
 
 <style lang="scss">
-@import 'compass/css3';
+@import "default";
 
 body {
   background-color: #000;
@@ -61,6 +71,12 @@ body {
   footer {
     height: 2.35em;
     @include flex(0 0 2.5em);
+  }
+
+  @include smp {
+    header {
+      height: 32%;
+    }
   }
 }
 </style>

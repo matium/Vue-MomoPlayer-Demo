@@ -13,6 +13,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import YouTubeVideoPlayer from './YouTubeVideoPlayer.vue';
+import DeviceType from '../utils/DeviceType';
 
 /**
  * ビデオコンテンツのコンポーネント
@@ -66,6 +67,7 @@ export default class Contents extends Vue {
    * ビデオのサイズを設定するメソッド
    */
   protected setVideoSize(): void {
+    if (DeviceType.isSMP) { return; }
     // 最大幅を更新する
     this.maxVideoW = Math.round(window.innerWidth * 0.8);
     // 現在のコンテナの高さからビデオの高さと幅を算出する
@@ -107,6 +109,20 @@ export default class Contents extends Vue {
     position: relative;
     height: 13%;
     min-height: 77px;
+  }
+
+  @include smp {
+    .video-container {
+      height: auto;
+      padding-top: 56.25%;
+      @include flex(0 0);
+    }
+
+    .video-nav {
+      margin-top: 2em;
+      height: 25px;
+      min-height: auto;
+    }
   }
 }
 </style>
