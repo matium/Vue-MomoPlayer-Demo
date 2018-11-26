@@ -2,9 +2,7 @@
   <header>
     <div class="app-title">
       <h1><span class="subtitle-bold">Momo</span><span class="subtitle-thin">Player</span></h1>
-      <p class="version">
-        <slot>App Version Here</slot>
-      </p>
+      <p class="version">{{ appVersion }}</p>
     </div>
   </header>
 </template>
@@ -14,6 +12,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 @Component
 export default class HeaderComponent extends Vue {
+  @Prop() private appVersion!: string;
 }
 </script>
 
@@ -42,12 +41,20 @@ header {
     .subtitle-thin {
       @include enFont('light');
     }
+
+    @include smp {
+      font-size: 23pt;
+    }
   }
 
   .version {
     text-align: center;
     margin: 0 auto 0 auto;
     font-size: 11pt;
+
+    @include smp {
+      font-size: 11.5pt;
+    }
   }
 }
 </style>
