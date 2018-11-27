@@ -17,3 +17,22 @@
 		font-weight: 400;
 	}
 }
+
+/**
+ * 透明度の設定をするmixin
+ */
+@mixin opacity($opacity) {
+	opacity: $opacity;
+	$opacityIE: $opacity * 100;
+	filter: alpha(opacity=$opacityIE);
+}
+
+/**
+ * 角Rの設定をするmixin
+ */
+@mixin borderRadius($value: 20px) {
+	-webkit-border-radius: $value;
+	-moz-border-radius: $value;
+	-ms-border-radius: $value;
+	border-radius: $value;
+}

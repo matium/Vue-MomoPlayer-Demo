@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 import 'velocity-animate';
 
@@ -27,7 +28,12 @@ Vue.use(VueYouTubeEmbed);
  * VueYouTubeEmbed：YouTubeの埋め込みプレイヤーを動的に扱うプラグイン
  *
  */
-@Component
+@Component({
+  computed: mapState([
+    'currentVideoIndex',
+    'currentVideoId'
+  ])
+})
 export default class YouTubeVideoPlayer extends Vue {
   /* YouTubeのビデオID */
   public videoId: string = '';
@@ -44,14 +50,6 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 表示フラグ */
   public isShown: boolean = true;
 
-  // 設定前の現在のビデオID
-  protected currentVideoId: string = '';
-
-
-  /* /////////////////////////////////////////
-  ** Props
-  //////////////////////////////////////////// */
-  @Prop() private ytVideoId!: string;
 
   /* /////////////////////////////////////////
   ** Watcher
@@ -60,7 +58,7 @@ export default class YouTubeVideoPlayer extends Vue {
    * 上のytVideoIdプロパティのウォッチャー
    * 更新時に非表示→表示トランジションを実行するためにwatchする
    */
-  @Watch('ytVideoId')
+  @Watch('currentVideoIndex')
   protected onYtVideoIdChange(newValue: string, oldValue: string): void {
     // this.videoId = newValue;
     if (newValue !== oldValue) {
@@ -76,7 +74,7 @@ export default class YouTubeVideoPlayer extends Vue {
   protected beforeMount(): void {
     // 初回起動時はytVideoIdプロパティをvideoIdにセットする
     // つまり、プレイヤーのvideo-idバインディングに渡す
-    this.videoId = this.ytVideoId;
+    this.videoId = this.currentVideoId;
   }
 
 
@@ -87,25 +85,28 @@ export default class YouTubeVideoPlayer extends Vue {
   protected beforeEnter(el: HTMLElement): void {
     console.log('Before Enter');
     el.style.opacity = '0';
+    el.style.transform = 'translateX(20%)';
   }
   /* 要素配置（表示アニメーション実行） */
   protected enter(el: HTMLElement): void {
     console.log('Enter Animation');
-    Velocity.animate(el, {
-      opacity: [1.0, 0]
+    Velocity(el, {
+      opacity: [1.0, 0],
+      translateX: ['0%', '20%']
     }, {
-      duration: 1000,
-      easing: 'linear'
+      duration: 400,
+      easing: 'easeOutQuart'
     });
   }
   /* 要素非表示（非表示アニメーション実行） */
   protected leave(el: HTMLElement, done: () => void): void {
     console.log('Leave Animation');
-    Velocity.animate(el, {
-      opacity: [0, 1.0]
+    Velocity(el, {
+      opacity: [0, 1.0],
+      translateX: ['-20%', '0%']
     }, {
-      duration: 1000,
-      easing: 'linear',
+      duration: 300,
+      easing: 'easeOutQuart',
       complete: (target) => {
         console.log(target);
         done();
@@ -115,7 +116,7 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素非表示時はビデオIDをセットして再表示 */
   protected afterLeave(el: HTMLElement): void {
     console.log('After Leave');
-    this.videoId = this.$props.ytVideoId;
+    this.videoId = this.currentVideoId;
     this.isShown = true;
   }
 
