@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  baseUrl: './',
+  baseUrl: '/demo/vue-momoplayer-demo/ver/0.1',
 
   chainWebpack: config => {
     config.externals({
@@ -13,8 +13,8 @@ module.exports = {
     loaderOptions: {
       sass: {
         includePaths: [
-          path.resolve(__dirname, './node_modules/compass-mixins/lib'),
-          path.resolve(__dirname, './src/assets/scss/')
+          '/Users/keita/Dropbox/DEVELOP/Mockups/play.matium/Vue-MomoPlayer-Demo/node_modules/compass-mixins/lib',
+          '/Users/keita/Dropbox/DEVELOP/Mockups/play.matium/Vue-MomoPlayer-Demo/src/assets/scss'
         ]
       }
     }
@@ -25,5 +25,11 @@ module.exports = {
       preProcessor: 'scss',
       patterns: [path.resolve(__dirname, "./src/assets/scss/global.scss")]
     }
-  }
+  },
+
+  outputDir: undefined,
+  assetsDir: undefined,
+  runtimeCompiler: undefined,
+  productionSourceMap: undefined,
+  parallel: undefined
 };

@@ -49,6 +49,8 @@ export default class YouTubeVideoPlayer extends Vue {
 
   /* 表示フラグ */
   public isShown: boolean = true;
+  /* 表示・非表示でスライドさせる方向 */
+  protected slideDirection: string = 'left';
 
 
   /* /////////////////////////////////////////
@@ -62,6 +64,14 @@ export default class YouTubeVideoPlayer extends Vue {
   protected onYtVideoIdChange(newValue: string, oldValue: string): void {
     // this.videoId = newValue;
     if (newValue !== oldValue) {
+      if (newValue > oldValue) {
+        // 次のビデオを右から左に出す
+        this.slideDirection = 'left';
+      }
+      else {
+        // 次のビデオを左から右に出す
+        this.slideDirection = 'right';
+      }
       this.isShown = false;
     }
   }
@@ -84,15 +94,19 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素配置前 */
   protected beforeEnter(el: HTMLElement): void {
     console.log('Before Enter');
+    // 透明度を0に
     el.style.opacity = '0';
-    el.style.transform = 'translateX(20%)';
+    // 初期X位置を設定
+    let initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
+    el.style.transform = 'translateX(' + initTransX + ')';
   }
   /* 要素配置（表示アニメーション実行） */
   protected enter(el: HTMLElement): void {
     console.log('Enter Animation');
+    let initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
     Velocity(el, {
       opacity: [1.0, 0],
-      translateX: ['0%', '20%']
+      translateX: ['0%', initTransX]
     }, {
       duration: 400,
       easing: 'easeOutQuart'
@@ -101,9 +115,10 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素非表示（非表示アニメーション実行） */
   protected leave(el: HTMLElement, done: () => void): void {
     console.log('Leave Animation');
+    let hideTransX: string = this.slideDirection === 'left' ? '-20%' : '20%';
     Velocity(el, {
       opacity: [0, 1.0],
-      translateX: ['-20%', '0%']
+      translateX: [hideTransX, '0%']
     }, {
       duration: 300,
       easing: 'easeOutQuart',

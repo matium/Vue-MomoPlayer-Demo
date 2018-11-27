@@ -24,7 +24,7 @@ import * as viewportUnitsBuggyfill from 'viewport-units-buggyfill';
 })
 export default class App extends Vue {
   // 現在のアプリケーションのバージョン
-  public appVersion: string = 'ver.0.1';
+  public appVersion: string = 'ver.0.2';
 
   /* インスタンス作成時メソッド */
   public created(): void {
