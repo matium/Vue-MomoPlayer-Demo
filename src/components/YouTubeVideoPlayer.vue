@@ -52,6 +52,10 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 表示・非表示でスライドさせる方向 */
   protected slideDirection: string = 'left';
 
+  /* mapState用プロパティ */
+  currentVideoIndex: number;
+  currentVideoId: string;
+
 
   /* /////////////////////////////////////////
   ** Watcher
@@ -97,14 +101,15 @@ export default class YouTubeVideoPlayer extends Vue {
     // 透明度を0に
     el.style.opacity = '0';
     // 初期X位置を設定
-    let initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
+    const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
     el.style.transform = 'translateX(' + initTransX + ')';
   }
   /* 要素配置（表示アニメーション実行） */
   protected enter(el: HTMLElement): void {
     console.log('Enter Animation');
-    let initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
-    Velocity(el, {
+    const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
+
+    Velocity.animate(el, {
       opacity: [1.0, 0],
       translateX: ['0%', initTransX]
     }, {
@@ -115,8 +120,8 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素非表示（非表示アニメーション実行） */
   protected leave(el: HTMLElement, done: () => void): void {
     console.log('Leave Animation');
-    let hideTransX: string = this.slideDirection === 'left' ? '-20%' : '20%';
-    Velocity(el, {
+    const hideTransX: string = this.slideDirection === 'left' ? '-20%' : '20%';
+    Velocity.animate(el, {
       opacity: [0, 1.0],
       translateX: [hideTransX, '0%']
     }, {

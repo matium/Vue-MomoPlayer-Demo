@@ -18,8 +18,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import YouTubeVideoPlayer from './YouTubeVideoPlayer.vue';
-import DotsNav from './navigations/DotsNav';
-import PrevNextNav from './navigations/PrevNextNav';
+import DotsNav from './navigations/DotsNav.vue';
+import PrevNextNav from './navigations/PrevNextNav.vue';
 import DeviceType from '../utils/DeviceType';
 
 /**
@@ -141,9 +141,16 @@ export default class Contents extends Vue {
     }
 
     .video-nav {
-      margin-top: 2em;
+      margin-top: 3em;
       height: 25px;
+      padding: 0 15px;
       min-height: auto;
+    }
+
+    .prev-next-nav-container {
+      position: relative;
+      width: 100%;
+      margin-top: -34px;
     }
   }
 }

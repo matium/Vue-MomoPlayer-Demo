@@ -13,7 +13,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
-import DotButton from './DotButton';
+import DotButton from './DotButton.vue';
 
 @Component({
   components: {DotButton},
@@ -23,6 +23,11 @@ import DotButton from './DotButton';
   ])
 })
 export default class DotsNav extends Vue {
+
+  /* mapState用プロパティ */
+  videos: any[];
+  currentVideoIndex: number;
+
   /**
    * DotButtonクリック時のイベントハンドラ
    * Stateの表示ビデオ番号を更新する
@@ -41,6 +46,7 @@ export default class DotsNav extends Vue {
 .nav-item-list {
   @include display-flex;
   @include justify-content(center);
+  @include flex-wrap(wrap);
   padding-top: 2.5em;
 
   .nav-item {
@@ -51,6 +57,14 @@ export default class DotsNav extends Vue {
 
     &:last-child {
       margin-right: 0;
+    }
+  }
+
+  @include smp {
+    padding-top: 0;
+
+    .nav-item {
+      margin-right: 15px;
     }
   }
 }

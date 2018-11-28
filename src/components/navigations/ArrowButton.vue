@@ -35,7 +35,7 @@ export default class ArrowButton extends Vue {
     display: block;
     width: 100%;
     height: 100%;
-    fill: #fff;
+    fill: $positiveButtonColor;
   }
 
   &.disabled {
@@ -56,10 +56,15 @@ export default class ArrowButton extends Vue {
       &.disabled {
         @include scale(1.0);
         svg {
-          fill: #fff;
+          fill: $positiveButtonColor;
         }
       }
     }
+  }
+
+  @include smp {
+    width: 23px;
+    height: 23px;
   }
 }
 </style>

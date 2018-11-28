@@ -22,7 +22,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import { mapState } from 'vuex';
-import ArrowButton from './ArrowButton';
+import ArrowButton from './ArrowButton.vue';
 
 @Component({
   components: {ArrowButton},
@@ -35,6 +35,10 @@ export default class PrevNextNav extends Vue {
 
   protected spaceWidth: number;
   protected itemHeight: number;
+
+  /* mapState用プロパティ */
+  isNextVideo: boolean;
+  isPrevVideo: boolean;
 
   /**
    * 配置の更新をするメソッド
@@ -54,14 +58,14 @@ export default class PrevNextNav extends Vue {
   /**
    * 前のビデオへボタンをクリック
    */
-  protected onPrevClick():void {
+  protected onPrevClick(): void {
     this.$store.dispatch('updatePrev');
   }
 
   /**
    * 次のビデオへボタンをクリック
    */
-  protected onNextClick():void {
+  protected onNextClick(): void {
     this.$store.dispatch('updateNext');
   }
 }
@@ -71,6 +75,10 @@ export default class PrevNextNav extends Vue {
 .nav-item-list {
   position: absolute;
   width: 100%;
+
+  @include smp {
+    position: relative;
+  }
 
   li {
     @include display-flex;
@@ -87,6 +95,19 @@ export default class PrevNextNav extends Vue {
 
     &.nav-item-next {
       right: 0;
+    }
+
+    @include smp {
+      width: auto;
+      height: auto;
+
+      &.nav-item-prev {
+        left: 1em;
+      }
+
+      &.nav-item-next {
+        right: 1em;
+      }
     }
   }
 }

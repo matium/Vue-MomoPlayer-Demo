@@ -1,7 +1,7 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
+import Vue from 'vue';
+import Vuex from 'vuex';
 
-Vue.use(Vuex)
+Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
@@ -34,18 +34,18 @@ export default new Vuex.Store({
   },
   mutations: {
     // 現在のビデオを更新する
-    updateCurrentVideo (state, videoIndex: number) {
+    updateCurrentVideo(state, videoIndex: number) {
       state.currentVideoIndex = videoIndex;
       state.currentVideoId = state.videos[videoIndex].videoId;
       // フラグをアップデート
-      const lastIndex = state.videos.length -1;
+      const lastIndex = state.videos.length - 1;
       state.isNextVideo = !(state.currentVideoIndex >= lastIndex);
       state.isPrevVideo = (state.currentVideoIndex > 0);
     }
   },
   actions: {
     // 次のビデオへ
-    updateNext ({ commit, state }) {
+    updateNext({ commit, state }) {
       if (state.isNextVideo) {
         const vIndex: number = state.currentVideoIndex + 1;
         commit('updateCurrentVideo', vIndex);
@@ -53,7 +53,7 @@ export default new Vuex.Store({
       }
     },
     // 前のビデオへ
-    updatePrev ({ commit, state }) {
+    updatePrev({ commit, state }) {
       if (state.isPrevVideo) {
         const vIndex: number = state.currentVideoIndex - 1;
         commit('updateCurrentVideo', vIndex);
@@ -61,4 +61,4 @@ export default new Vuex.Store({
       }
     }
   }
-})
+});
