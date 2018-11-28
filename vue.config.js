@@ -1,7 +1,7 @@
 const path = require('path');
 
 module.exports = {
-  baseUrl: '/demo/vue-momoplayer-demo/ver/0.1',
+  baseUrl: '/demo/vue-momoplayer-demo/ver/0.3',
 
   chainWebpack: config => {
     config.externals({
