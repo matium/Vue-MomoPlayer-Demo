@@ -16,6 +16,7 @@
 
 <script lang="ts">
 import { Component, Prop, Watch, Vue } from 'vue-property-decorator';
+import { mapState } from 'vuex';
 import VueYouTubeEmbed from 'vue-youtube-embed';
 import 'velocity-animate';
 
@@ -27,7 +28,12 @@ Vue.use(VueYouTubeEmbed);
  * VueYouTubeEmbed：YouTubeの埋め込みプレイヤーを動的に扱うプラグイン
  *
  */
-@Component
+@Component({
+  computed: mapState([
+    'currentVideoIndex',
+    'currentVideoId'
+  ])
+})
 export default class YouTubeVideoPlayer extends Vue {
   /* YouTubeのビデオID */
   public videoId: string = '';
@@ -43,15 +49,13 @@ export default class YouTubeVideoPlayer extends Vue {
 
   /* 表示フラグ */
   public isShown: boolean = true;
+  /* 表示・非表示でスライドさせる方向 */
+  protected slideDirection: string = 'left';
 
-  // 設定前の現在のビデオID
-  protected currentVideoId: string = '';
+  /* mapState用プロパティ */
+  currentVideoIndex: number;
+  currentVideoId: string;
 
-
-  /* /////////////////////////////////////////
-  ** Props
-  //////////////////////////////////////////// */
-  @Prop() private ytVideoId!: string;
 
   /* /////////////////////////////////////////
   ** Watcher
@@ -60,10 +64,18 @@ export default class YouTubeVideoPlayer extends Vue {
    * 上のytVideoIdプロパティのウォッチャー
    * 更新時に非表示→表示トランジションを実行するためにwatchする
    */
-  @Watch('ytVideoId')
+  @Watch('currentVideoIndex')
   protected onYtVideoIdChange(newValue: string, oldValue: string): void {
     // this.videoId = newValue;
     if (newValue !== oldValue) {
+      if (newValue > oldValue) {
+        // 次のビデオを右から左に出す
+        this.slideDirection = 'left';
+      }
+      else {
+        // 次のビデオを左から右に出す
+        this.slideDirection = 'right';
+      }
       this.isShown = false;
     }
   }
@@ -76,7 +88,7 @@ export default class YouTubeVideoPlayer extends Vue {
   protected beforeMount(): void {
     // 初回起動時はytVideoIdプロパティをvideoIdにセットする
     // つまり、プレイヤーのvideo-idバインディングに渡す
-    this.videoId = this.ytVideoId;
+    this.videoId = this.currentVideoId;
   }
 
 
@@ -86,26 +98,35 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素配置前 */
   protected beforeEnter(el: HTMLElement): void {
     console.log('Before Enter');
+    // 透明度を0に
     el.style.opacity = '0';
+    // 初期X位置を設定
+    const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
+    el.style.transform = 'translateX(' + initTransX + ')';
   }
   /* 要素配置（表示アニメーション実行） */
   protected enter(el: HTMLElement): void {
     console.log('Enter Animation');
+    const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
+
     Velocity.animate(el, {
-      opacity: [1.0, 0]
+      opacity: [1.0, 0],
+      translateX: ['0%', initTransX]
     }, {
-      duration: 1000,
-      easing: 'linear'
+      duration: 400,
+      easing: 'easeOutQuart'
     });
   }
   /* 要素非表示（非表示アニメーション実行） */
   protected leave(el: HTMLElement, done: () => void): void {
     console.log('Leave Animation');
+    const hideTransX: string = this.slideDirection === 'left' ? '-20%' : '20%';
     Velocity.animate(el, {
-      opacity: [0, 1.0]
+      opacity: [0, 1.0],
+      translateX: [hideTransX, '0%']
     }, {
-      duration: 1000,
-      easing: 'linear',
+      duration: 300,
+      easing: 'easeOutQuart',
       complete: (target) => {
         console.log(target);
         done();
@@ -115,7 +136,7 @@ export default class YouTubeVideoPlayer extends Vue {
   /* 要素非表示時はビデオIDをセットして再表示 */
   protected afterLeave(el: HTMLElement): void {
     console.log('After Leave');
-    this.videoId = this.$props.ytVideoId;
+    this.videoId = this.currentVideoId;
     this.isShown = true;
   }
 

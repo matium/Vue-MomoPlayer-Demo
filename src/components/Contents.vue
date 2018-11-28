@@ -2,10 +2,15 @@
   <div class="contents">
     <!-- ビデオコンテンツエリア -->
     <div class="video-container">
-      <you-tube-video-player ref="videoPlayer" v-bind:yt-video-id="currentVideoId"></you-tube-video-player>
+      <you-tube-video-player ref="videoPlayer"></you-tube-video-player>
     </div>
     <!-- ビデオ選択のナビゲーション -->
-    <div class="video-nav"></div>
+    <nav class="video-nav">
+      <dots-nav ref="dotsNav"></dots-nav>
+    </nav>
+    <nav class="prev-next-nav-container">
+      <prev-next-nav ref="prevNextNav"></prev-next-nav>
+    </nav>
   </div>
 </template>
 
@@ -13,6 +18,8 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
 import YouTubeVideoPlayer from './YouTubeVideoPlayer.vue';
+import DotsNav from './navigations/DotsNav.vue';
+import PrevNextNav from './navigations/PrevNextNav.vue';
 import DeviceType from '../utils/DeviceType';
 
 /**
@@ -24,14 +31,12 @@ import DeviceType from '../utils/DeviceType';
  */
 @Component({
   components: {
+    DotsNav,
+    PrevNextNav,
     YouTubeVideoPlayer
   }
 })
 export default class Contents extends Vue {
-  // 初期のビデオID
-  public initVideoId: string = 'fuCzjM1gAuM';
-  // 現在のYTビデオのID
-  public currentVideoId: string = this.initVideoId;
   // ビデオサイズ
   public videoW: number = 0;
   public videoH: number = 0;
@@ -56,6 +61,7 @@ export default class Contents extends Vue {
     this.videoNav = this.$el.children[1] as HTMLDivElement;
     this.setVideoSize();
   }
+
 
   /* リサイズメソッド */
   protected resizeVideo(): void {
@@ -85,6 +91,9 @@ export default class Contents extends Vue {
     // ビデオコンポーネントのサイズを更新
     const videoPlayer: YouTubeVideoPlayer = this.$refs.videoPlayer as YouTubeVideoPlayer;
     videoPlayer.updateSize(this.videoW, this.videoH);
+    // 前後ナビの配置を更新
+    const prevNextNav: PrevNextNav = this.$refs.prevNextNav as PrevNextNav;
+    prevNextNav.updatePosition(this.videoW, this.videoH);
 
     console.log('[Video Size] w:' + this.videoW + '  h:' + this.videoH);
   }
@@ -98,17 +107,30 @@ export default class Contents extends Vue {
   @include flex-direction(column);
   position: relative;
   width: 100%;
+  overflow: hidden;
 
   .video-container {
     position: relative;
+    z-index: 0;
     height: 87%;
     @include flex(1 0 87%);
   }
 
   .video-nav {
     position: relative;
+    z-index: 2;
+    width: 80%;
     height: 13%;
     min-height: 77px;
+    margin: 0 auto 0 auto;
+  }
+
+  .prev-next-nav-container {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
   }
 
   @include smp {
@@ -119,9 +141,16 @@ export default class Contents extends Vue {
     }
 
     .video-nav {
-      margin-top: 2em;
+      margin-top: 3em;
       height: 25px;
+      padding: 0 15px;
       min-height: auto;
+    }
+
+    .prev-next-nav-container {
+      position: relative;
+      width: 100%;
+      margin-top: -34px;
     }
   }
 }
