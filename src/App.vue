@@ -24,7 +24,7 @@ import * as viewportUnitsBuggyfill from 'viewport-units-buggyfill';
 })
 export default class App extends Vue {
   // 現在のアプリケーションのバージョン
-  public appVersion: string = 'ver.0.2';
+  public appVersion: string = 'ver.0.3';
 
   /* インスタンス作成時メソッド */
   public created(): void {
@@ -52,6 +52,10 @@ body {
   @include justify-content(space-between);
   width: 100%;
   height: 100vh;
+  background-image: url('assets/images/bg-ribbon.png');
+  background-repeat: no-repeat;
+  background-size: 110px 110px;
+  background-position: left top;
 
   /**
    * 各コンポーネントの縦方向のレイアウト設定
@@ -74,6 +78,10 @@ body {
   }
 
   @include smp {
+    background-image: url('assets/images/bg-ribbon_sp.png');
+    background-size: 73px 72px;
+    background-position: right bottom;
+
     header {
       height: 32%;
     }
