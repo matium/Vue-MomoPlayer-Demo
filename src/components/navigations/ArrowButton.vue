@@ -19,6 +19,10 @@ export default class ArrowButton extends Vue {
    */
   @Prop() private enabled!: boolean;
 
+  /**
+   * ボタンクリック時のリスナーメソッド
+   * 'click'イベントを発火する
+   */
   protected emitButtonClick(): void {
     this.$emit('click');
   }

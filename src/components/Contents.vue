@@ -52,6 +52,7 @@ export default class Contents extends Vue {
   /* インスタンス作成時メソッド */
   public created(): void {
     window.addEventListener('resize', this.resizeVideo);
+    this.$store.dispatch('loadPlaylistData');
   }
 
 

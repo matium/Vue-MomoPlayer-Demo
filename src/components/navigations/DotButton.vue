@@ -17,7 +17,8 @@ export default class DotButton extends Vue {
   @Prop() private currentVideoIndex!: string;
 
   /**
-   * ボタンのクリック時イベント
+   * ボタンのクリック時イベントリスナー
+   * 'click'イベントを発火し、表示ターゲットになるビデオ番号を伝達
    */
   protected emitButtonClick(): void {
     this.$emit('click', this.targetVideoIndex);

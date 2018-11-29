@@ -66,7 +66,6 @@ export default class YouTubeVideoPlayer extends Vue {
    */
   @Watch('currentVideoIndex')
   protected onYtVideoIdChange(newValue: string, oldValue: string): void {
-    // this.videoId = newValue;
     if (newValue !== oldValue) {
       if (newValue > oldValue) {
         // 次のビデオを右から左に出す
@@ -76,6 +75,7 @@ export default class YouTubeVideoPlayer extends Vue {
         // 次のビデオを左から右に出す
         this.slideDirection = 'right';
       }
+      // 非表示アニメーション開始
       this.isShown = false;
     }
   }
@@ -104,9 +104,10 @@ export default class YouTubeVideoPlayer extends Vue {
     const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
     el.style.transform = 'translateX(' + initTransX + ')';
   }
+
   /* 要素配置（表示アニメーション実行） */
   protected enter(el: HTMLElement): void {
-    console.log('Enter Animation');
+    // 左右どちらから表示させるかを決める
     const initTransX: string = this.slideDirection === 'left' ? '20%' : '-20%';
 
     Velocity.animate(el, {
@@ -117,10 +118,12 @@ export default class YouTubeVideoPlayer extends Vue {
       easing: 'easeOutQuart'
     });
   }
+
   /* 要素非表示（非表示アニメーション実行） */
   protected leave(el: HTMLElement, done: () => void): void {
-    console.log('Leave Animation');
+    // 左右どちらへ隠すかを決める
     const hideTransX: string = this.slideDirection === 'left' ? '-20%' : '20%';
+
     Velocity.animate(el, {
       opacity: [0, 1.0],
       translateX: [hideTransX, '0%']
@@ -128,11 +131,12 @@ export default class YouTubeVideoPlayer extends Vue {
       duration: 300,
       easing: 'easeOutQuart',
       complete: (target) => {
-        console.log(target);
+        // 完了メソッドを実行し、afterLeaveライフサイクルへ
         done();
       }
     });
   }
+
   /* 要素非表示時はビデオIDをセットして再表示 */
   protected afterLeave(el: HTMLElement): void {
     console.log('After Leave');

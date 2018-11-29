@@ -1,5 +1,6 @@
 <template>
   <ul class="nav-item-list">
+    <!-- プレイリストの数だけボタンは配置される -->
     <li class="nav-item" v-for="video in videos" v-bind:key="video.index">
       <dot-button
         v-bind:target-video-index="video.index"
