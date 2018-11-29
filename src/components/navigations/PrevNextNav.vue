@@ -1,5 +1,6 @@
 <template>
   <ul class="nav-item-list">
+    <!-- 前のビデオへ -->
     <li class="nav-item-prev" ref="prevItem">
       <arrow-button v-on:click="onPrevClick" v-bind:enabled="isPrevVideo">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26 26" xml:space="preserve">
@@ -8,6 +9,7 @@
         </svg>
       </arrow-button>
     </li>
+    <!-- 次のビデオへ -->
     <li class="nav-item-next" ref="nextItem">
       <arrow-button v-on:click="onNextClick" v-bind:enabled="isNextVideo">
         <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 26 26" xml:space="preserve">
@@ -32,8 +34,9 @@ import ArrowButton from './ArrowButton.vue';
   ])
 })
 export default class PrevNextNav extends Vue {
-
+  /* ビデオコンテンツの幅 */
   protected spaceWidth: number;
+  /* Previous／Nextの各ボタンを配置するli.nav-itemの高さ */
   protected itemHeight: number;
 
   /* mapState用プロパティ */
@@ -48,7 +51,9 @@ export default class PrevNextNav extends Vue {
   public updatePosition(contentsSpaceWidth: number, contentsSpaceHeight: number): void {
     this.spaceWidth = contentsSpaceWidth;
     this.itemHeight = contentsSpaceHeight;
+    // ボタンを配置するli要素の幅を決める
     const itemWidth: number = Math.round((this.$el.clientWidth - this.spaceWidth) / 2);
+    // Previous／Nextの各ボタンを配置するli要素のサイズを設定
     const prevItem: HTMLLIElement = this.$el.children[0] as HTMLLIElement;
     const nextItem: HTMLLIElement = this.$el.children[1] as HTMLLIElement;
     prevItem.style.width = nextItem.style.width = itemWidth + 'px';
