@@ -6,7 +6,7 @@
     @afterLeave="afterLeave"
     :css="false"
   >
-    <div class="video-box" v-show="isShown">
+    <div class="video-box" v-show="isShown && isLoadedData">
       <!-- YouTubeの埋め込みビデオラッパー -->
       <youtube class="yt-video" :video-id="videoId" :player-vars="videoOptions"></youtube>
     </div>
@@ -30,6 +30,7 @@ Vue.use(VueYouTubeEmbed);
  */
 @Component({
   computed: mapState([
+    'videos',
     'currentVideoIndex',
     'currentVideoId'
   ])
@@ -51,6 +52,8 @@ export default class YouTubeVideoPlayer extends Vue {
   public isShown: boolean = true;
   /* 表示・非表示でスライドさせる方向 */
   protected slideDirection: string = 'left';
+  /* ビデオデータがロードされているかどうか */
+  public isLoadedData: boolean = false;
 
   /* mapState用プロパティ */
   currentVideoIndex: number;
@@ -65,7 +68,8 @@ export default class YouTubeVideoPlayer extends Vue {
    * 更新時に非表示→表示トランジションを実行するためにwatchする
    */
   @Watch('currentVideoIndex')
-  protected onYtVideoIdChange(newValue: string, oldValue: string): void {
+  protected onYtVideoIndexChange(newValue: number, oldValue: number): void {
+    console.log('new: ' + newValue + '  old: ' + oldValue);
     if (newValue !== oldValue) {
       if (newValue > oldValue) {
         // 次のビデオを右から左に出す
@@ -80,15 +84,17 @@ export default class YouTubeVideoPlayer extends Vue {
     }
   }
 
-
-  /* /////////////////////////////////////////
-  ** LifeCycles
-  //////////////////////////////////////////// */
-  /* DOMマウント前に実行されるメソッド */
-  protected beforeMount(): void {
-    // 初回起動時はytVideoIdプロパティをvideoIdにセットする
-    // つまり、プレイヤーのvideo-idバインディングに渡す
-    this.videoId = this.currentVideoId;
+  /**
+   * ビデオデータが読み込まれるとビデオデータリストが更新されるので
+   * ビデオが存在する場合はそこでフラグをtrueに変え、
+   * 設定されているビデオIDをプレイヤーに適用する
+   */
+  @Watch('videos')
+  protected onYtVideoIdChange(newValue: any[], oldValue: any[]): void {
+    if (!this.isLoadedData) {
+      this.isLoadedData = newValue.length > 0;
+      this.videoId = this.currentVideoId;
+    }
   }
 
 

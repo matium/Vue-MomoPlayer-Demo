@@ -48,10 +48,13 @@ export default class Contents extends Vue {
   // ビデオの最大幅
   protected maxVideoW: number = 0;
 
+  // mapState用プロパティ
+  videos: any[];
+
+
 
   /* インスタンス作成時メソッド */
   public created(): void {
-    window.addEventListener('resize', this.resizeVideo);
     this.$store.dispatch('loadPlaylistData');
   }
 
@@ -61,13 +64,7 @@ export default class Contents extends Vue {
     this.videoContainer = this.$el.children[0] as HTMLDivElement;
     this.videoNav = this.$el.children[1] as HTMLDivElement;
     this.setVideoSize();
-  }
-
-
-  /* リサイズメソッド */
-  protected resizeVideo(): void {
-    // ビデオサイズの変更
-    this.setVideoSize();
+    window.addEventListener('resize', this.setVideoSize);
   }
 
   /**

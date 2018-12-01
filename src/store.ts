@@ -7,16 +7,11 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     // ビデオのデータを格納する配列
-    videos: [
-      {
-        index: 0,
-        videoId: 'fuCzjM1gAuM'
-      }
-    ],
+    videos: [],
     // 現在のビデオ番号
     currentVideoIndex: 0,
     // 現在表示されているビデオのYouTubeのビデオID
-    currentVideoId: 'fuCzjM1gAuM',
+    currentVideoId: '',
     // 次のビデオが存在するかどうか
     // つまり表示されているのが最後のビデオかどうか
     isNextVideo: true,
@@ -44,6 +39,32 @@ export default new Vuex.Store({
       const lastIndex = state.videos.length - 1;
       state.isNextVideo = !(state.currentVideoIndex >= lastIndex);
       state.isPrevVideo = (state.currentVideoIndex > 0);
+    },
+    
+    setLoadedPlaylistData(state, payload) {
+      console.log('Loaded Playlist Data');
+      // 取得したデータを一時保存
+      state.ytPlaylistData = payload.data;
+      // データから必要な情報だけを使って加工する
+      const items: any[] = state.ytPlaylistData.items;
+      const itemAmount: number = items.length;
+      const videos: any[] = [];
+      // すべてのビデオからYouTubeのビデオIDだけを使う
+      for (let i: number = 0; i < itemAmount; i++) {
+        const videoData = {
+          index: i,
+          videoId: items[i].snippet.resourceId.videoId
+        };
+        videos.push(videoData);
+      }
+      // ステートのビデオデータリストを更新
+      state.videos = videos;
+      // 表示ビデオを更新
+      this.commit('updateCurrentVideo', 0);
+    },
+    
+    errorLoadedPlaylist(state, payload) {
+      state.isYtLoadError = payload;
     }
   },
   actions: {
@@ -84,26 +105,11 @@ export default new Vuex.Store({
       axios.get(queryUrl)
         // 成功時
         .then((response) => {
-          // 取得したデータを一時保存
-          state.ytPlaylistData = response.data;
-          // データから必要な情報だけを使って加工する
-          const items: any[] = state.ytPlaylistData.items;
-          const itemAmount: number = items.length;
-          const videos: any[] = [];
-          // すべてのビデオからYouTubeのビデオIDだけを使う
-          for (let i: number = 0; i < itemAmount; i++) {
-            const videoData = {
-              index: i,
-              videoId: items[i].snippet.resourceId.videoId
-            };
-            videos.push(videoData);
-          }
-          // ステートのビデオデータリストを更新
-          state.videos = videos;
+          commit('setLoadedPlaylistData', response);
         })
         // 失敗時
         .catch((error) => {
-          state.isYtLoadError = error;
+          commit('errorLoadedPlaylist', error);
         });
     }
   }
