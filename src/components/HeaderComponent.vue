@@ -25,7 +25,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 export default class HeaderComponent extends Vue {
   @Prop() private appVersion!: string;
 
-  protected sourceCodeLinkUrl: string = 'https://github.com/matium/Vue-MomoPlayer-Demo/tree/ver.0.3-Use-Assets';
+  protected sourceCodeLinkUrl: string = 'https://github.com/matium/Vue-MomoPlayer-Demo/';
 }
 </script>
 
